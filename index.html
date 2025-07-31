@@ -7,8 +7,35 @@
   <link href='/style.css' rel='stylesheet'>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
+  <div id="control-panel">
+    <div id="control-grid-dimensions">
+      <label for="grid-width">Grid Width</label></label>
+      <input type="text" id="grid-width" value="16">
+      <label for="grid-height">Grid Height</label>
+      <input type="text" id="grid-height" value="16">
+      <button id="grid-set-btn">Reset Grid</button>
+    </div>
+    <div id="control-store">
+      <button id="set-storage-btn">Store</button>
+      <button id="load-storage-btn">Load</button>
+      <button id="clear-storage-btn">Clear</button>
+    </div>
+    <div id="control-solve">
+      <button id="solve-path-btn">Path</button>
+      <button id="show-path-btn">Show path</button>
+    </div>
+  </div>
+  <main>
+    <div id="grid-area"></div>
+    <div id="word-list">
+      <textarea name="word-list-textarea" id="word-list-textarea"></textarea>
+    </div>
+  </main>
+  <div id="cell-dialog">
+    <input type="text" id="char-input" maxlength="1">
+    <button id="char-set-btn">Set Char</button>
+    <button id="reset-cell-btn">Reset Cell</button>
+  </div>
   <script defer type="text/javascript" src="/main.js"></script>
 </body>
 </html>

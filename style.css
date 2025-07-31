@@ -1,1 +1,51 @@
-/* Add styles here */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font: 16px monospace;
+}
+
+body {
+    background-color: #aaa;
+}
+
+main {
+    display: flex;
+}
+
+.grid-row {
+    display: flex;
+}
+
+.grid-cell {
+    background-color: #888;
+    border: 1px solid black;
+    width: 30px;
+    height: 30px;
+    user-select: none;
+}
+
+.grid-cell:hover {
+    background-color: #555;
+}
+
+.marked-cell {
+    background-color: #ccc;
+}
+
+.char-cell {
+    background-color: #fff;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+.path-cell {
+    background-color: #5184d6;
+}
+
+#cell-dialog {
+    display: none;
+    position: fixed;
+}
