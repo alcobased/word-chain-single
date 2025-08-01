@@ -21,6 +21,8 @@ const markedCells = new Map();
 
 let walkedPath = null;
 
+let finalSolution = null;
+
 const drawGrid = () => {
   //   console.log("Drawing grid...");
   //   console.log(markedCells);
@@ -187,6 +189,10 @@ const showPath = () => {
         const cellElement = document.querySelector(
           `[data-x="${x}"][data-y="${y}"]`
         );
+        if (finalSolution) {
+          cellElement.textContent = finalSolution.chain[index];
+          cellElement.classList.add("char-cell");
+        }
         cellElement.classList.add("path-cell");
         // remove class after delay
         setTimeout(() => {
@@ -323,82 +329,83 @@ const solveGrid = () => {
 
   const restrictionCheck = (chainString) => {
     // Checks if chainString passes all restrictions
-    console.log("Restriction check", chainString);
 
-    restrictionList.forEach((restriction) => {
+    for (const restriction of restrictionList) {
       const [index, connectionIndex, char] = restriction;
-      if (char !== null && char !== chainString[index]) {
+      // if index has reached chainString length, return true
+      if (index >= chainString.length - 1) {
+        return true;
+      }
+
+      if (
+        char !== null &&
+        index < chainString.length &&
+        char !== chainString[index]
+      ) {
         return false;
       }
+
       if (
         connectionIndex !== null &&
-        connectionIndex <= chainString.length &&
+        connectionIndex < chainString.length &&
         chainString[index] !== chainString[connectionIndex]
       ) {
         return false;
       }
-    });
+    }
     return true;
   };
 
-  const chainWords = (usedWords, currentChain, solutionList, callDepth = 0) => {
-    console.log(`chainWords call depth ${callDepth}`);
-    console.log(usedWords, currentChain, solutionList);
-
-    // usedWords is a set for faster lookup
-    // currentChain is a string or raw connected words
-    // solutionList is an array of words in order
-    // example of valid arguments:
-    // usedWords = new Set(["hello", "lower"])
-    // currentChain = "hellower"
-    // solutionList = ["hello", "lower"]
-
-    // if there are no words in the solution - consider all words
-    // if there are words in the solution - consider only words that are connected to the last word in the solution
-
-    // base case
+  const chainWords = (usedWords, currentChain, solutionList) => {
+    // Base case: solution found
     if (currentChain.length === restrictionList.length) {
-      console.log("Base case reached");
-
-      return [currentChain, solutionList];
+      return { chain: currentChain, words: solutionList };
     }
-    const nextConnections = currentChain
-      ? wordConnections.get(solutionList[solutionList.length - 1])
+
+    const lastWord = solutionList[solutionList.length - 1];
+    const nextPossibleWords = lastWord
+      ? wordConnections.get(lastWord)
       : allWords;
 
-    if (nextConnections.legth === 0) {
+    if (!nextPossibleWords || nextPossibleWords.length === 0) {
       return null;
     }
 
-    nextConnections
-      .filter((word) => !usedWords.has(word))
-      .forEach((nextWord) => {
+    for (const nextWord of nextPossibleWords) {
+      if (!usedWords.has(nextWord)) {
         const nextChain =
           currentChain + (currentChain ? nextWord.substring(2) : nextWord);
-        console.log(
-          `Current chain: ${currentChain}, next word: ${nextWord}, next chain: ${nextChain}`
-        );
 
-        if (restrictionCheck(nextChain)) {
-          console.log("Restriction check passed");
-          const nextSolutionList = [...solutionList, nextWord];
+        // Pruning: check restriction early to avoid unnecessary recursion
+        if (
+          nextChain.length <= restrictionList.length &&
+          restrictionCheck(nextChain)
+        ) {
           const solution = chainWords(
             new Set([...usedWords, nextWord]),
             nextChain,
-            nextSolutionList,
-            callDepth + 1
+            [...solutionList, nextWord]
           );
+
           if (solution) {
-            console.log(`Solution found at depth ${callDepth}`);
-            console.log(solution);
             return solution;
           }
         }
-      });
+      }
+    }
+
+    // No solution found in this branch
+    return null;
   };
 
   const solution = chainWords(new Set(), "", []);
-  console.log(solution);
+  if (solution) {
+    console.log(solution);
+    finalSolution = solution;
+    showPath();
+  } else {
+    alert("No solution found");
+  }
 };
 const loadFromStorage = () => {
   console.log("Loading from storage...");
