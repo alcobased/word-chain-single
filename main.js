@@ -323,6 +323,7 @@ const solveGrid = () => {
 
   const restrictionCheck = (chainString) => {
     // Checks if chainString passes all restrictions
+    console.log("Restriction check", chainString);
 
     restrictionList.forEach((restriction) => {
       const [index, connectionIndex, char] = restriction;
@@ -337,12 +338,11 @@ const solveGrid = () => {
         return false;
       }
     });
-    console.log("Restriction check passed");
     return true;
   };
 
-  const chainWords = (usedWords, currentChain, solutionList) => {
-    console.log("chainWords");
+  const chainWords = (usedWords, currentChain, solutionList, callDepth = 0) => {
+    console.log(`chainWords call depth ${callDepth}`);
     console.log(usedWords, currentChain, solutionList);
 
     // usedWords is a set for faster lookup
@@ -355,10 +355,15 @@ const solveGrid = () => {
 
     // if there are no words in the solution - consider all words
     // if there are words in the solution - consider only words that are connected to the last word in the solution
-    const nextConnections = wordConnections.get(
-      solutionList[solutionList.length - 1]
-    )
-      ? solutionList
+
+    // base case
+    if (currentChain.length === restrictionList.length) {
+      console.log("Base case reached");
+
+      return [currentChain, solutionList];
+    }
+    const nextConnections = currentChain
+      ? wordConnections.get(solutionList[solutionList.length - 1])
       : allWords;
 
     if (nextConnections.legth === 0) {
@@ -369,15 +374,23 @@ const solveGrid = () => {
       .filter((word) => !usedWords.has(word))
       .forEach((nextWord) => {
         const nextChain =
-          currentChain + nextWord.substring(2) ? currentChain : nextWord;
+          currentChain + (currentChain ? nextWord.substring(2) : nextWord);
+        console.log(
+          `Current chain: ${currentChain}, next word: ${nextWord}, next chain: ${nextChain}`
+        );
+
         if (restrictionCheck(nextChain)) {
+          console.log("Restriction check passed");
           const nextSolutionList = [...solutionList, nextWord];
           const solution = chainWords(
             new Set([...usedWords, nextWord]),
             nextChain,
-            nextSolutionList
+            nextSolutionList,
+            callDepth + 1
           );
           if (solution) {
+            console.log(`Solution found at depth ${callDepth}`);
+            console.log(solution);
             return solution;
           }
         }
