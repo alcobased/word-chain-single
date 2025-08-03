@@ -14,6 +14,9 @@ const walkGridBtn = document.getElementById("solve-path-btn");
 const showPathBtn = document.getElementById("show-path-btn");
 const solveGridBtn = document.getElementById("solve-grid");
 
+const loadFromFileBtn = document.getElementById("load-from-file-btn");
+const saveToFileBtn = document.getElementById("save-to-file-btn");
+
 let startSetting = false;
 let cellDialogKey = null;
 
@@ -427,6 +430,14 @@ const loadFromStorage = () => {
   }
 };
 
+const saveStateToFile = () => {
+  console.log("Saving state to file...");
+};
+
+const loadStateFromFile = () => {
+  console.log("Loading state from file...");
+};
+
 showPathBtn.addEventListener("click", showPath);
 
 walkGridBtn.addEventListener("click", enableStartSetting);
@@ -480,6 +491,10 @@ wordListTextarea.addEventListener("input", () => {
   // uppercase input
   wordListTextarea.value = wordListTextarea.value.toUpperCase();
 });
+
+saveToFileBtn.addEventListener("click", saveStateToFile);
+
+loadFromFileBtn.addEventListener("click", loadStateFromFile);
 
 loadFromStorage();
 drawGrid();

@@ -20,10 +20,14 @@
       <button id="load-storage-btn">Load</button>
       <button id="clear-storage-btn">Clear</button>
     </div>
+    <div id="control-file">
+      <button id="save-to-file-dialog-btn">💾</button>
+      <button id="load-from-file-dialog-btn">📂</button>
+    </div>
     <div id="control-solve">
-      <button id="solve-path-btn">Path</button>
-      <button id="show-path-btn">Show path</button>
-      <button id="solve-grid">Solve</button>
+      <button id="solve-path-btn">👣</button>
+      <button id="show-path-btn">👁️</button>
+      <button id="solve-grid">🧩</button>
     </div>
   </div>
   <main>
@@ -32,10 +36,20 @@
       <textarea name="word-list-textarea" id="word-list-textarea"></textarea>
     </div>
   </main>
-  <div id="cell-dialog">
+  <div id="cell-dialog" class="dialog-box">
     <input type="text" id="char-input" maxlength="1">
     <button id="char-set-btn">Set Char</button>
     <button id="reset-cell-btn">Reset Cell</button>
+  </div>
+  <div id="save-to-file-dialog" class="dialog-box">
+    <label for="save-to-file-input">File Name</label>
+    <input type="text" id="save-to-file-input">
+    <button id="save-to-file-btn">Save</button>
+  </div>
+  <div id="load-from-file-dialog" class="dialog-box">
+    <label for="load-from-file-input">File Name</label>
+    <input type="file" name="load-from-file-input" id="load-from-file-input">
+    <button id="load-from-file-btn">Load</button>
   </div>
   <script defer type="text/javascript" src="/main.js"></script>
 </body>
